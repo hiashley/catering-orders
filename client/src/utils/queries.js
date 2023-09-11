@@ -1,25 +1,26 @@
-import gql from '@apollo/client'
-
-export const QUERY_MENU = gql`
-  query menu {
-    menu {
-      menu_id
-      option_id
-    }
-  }`;
+import {gql} from '@apollo/client'
 
 export const QUERY_MENU_ITEM = gql`
-  query menuItem {
+  query menuItems {
     menuItem {
-      menu_id
-      menu_name
+      _id
+      menuName
+      menuDescription
+      menuPrice
+      posId
+      ingredients
     }
   }`;
 
 export const QUERY_MENU_OPTION = gql`
-  query menuOption {
-    menuOption {
-      option_id
-      option_name
-    }
-  }`;
+query menuOption {
+  menuOptions {
+    _id
+    optionValueId
+    optionName
+    optionValue
+    optionPrice
+    posModId
+    ingredients
+  }
+}`;

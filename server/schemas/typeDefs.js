@@ -5,6 +5,33 @@ const typeDefs = `
     email: String
     password: String
   }
+  
+  type MenuOption {
+    _id: ID
+    optionValueId: Int
+    optionName: String
+    optionValue: String
+    optionPrice: Float
+    posModId: String
+    ingredients: [Ingredient]!
+  }
+
+  type MenuItem {
+    _id: ID
+    menuName: String
+    menuDescription: String
+    menuPrice: Float
+    posId: String
+    ingredients: [Ingredient]!
+  }
+
+  type Ingredient {
+    _id: ID
+    name: String
+    amount: Float
+    unit: String
+  }
+
   type Auth {
     token: ID!
     user: User
@@ -12,6 +39,8 @@ const typeDefs = `
 
   type Query {
     users: [User]
+    menuItems:[MenuItem]
+    menuOptions: [MenuOption]
     user(username: String!): User
     me: User
   }

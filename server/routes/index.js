@@ -46,4 +46,8 @@ router.get("/getAllOrdersFull", async (req, res) => {
 })
 
 
+// INSERT TO DB
+
+
+
 module.exports = router;

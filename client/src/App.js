@@ -8,30 +8,15 @@ import {
   ApolloProvider,
   createHttpLink
 } from '@apollo/client';
-
 const httpLink = createHttpLink({
   uri: '/graphql',
 });
-
 const client = new ApolloClient({
   // Set up our client to execute the `authLink` middleware prior to making the request to our GraphQL API
   // link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
-
 function App() {
-  useEffect(() => {
-    const fetchApi = async () => {
-      try {
-        const {menu, options} = await getAllMenuItems();
-        console.log(menu)
-        console.log(options)
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchApi();
-  }, []);
   return (
     <ApolloProvider client={client}>
     <Router>

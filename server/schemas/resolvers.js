@@ -1,10 +1,16 @@
-const { User } = require('../models');
+const { User, MenuItem, MenuOption } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
 
 const resolvers = {
   Query: {
     users: async () => {
       return User.find()
+    },
+    menuItems: async () => {
+      return MenuItem.find()
+    },
+    menuOptions: async () => {
+      return MenuOption.find()
     },
     user: async (parent, { username }) => {
       return User.findOne({ username })
