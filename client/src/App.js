@@ -1,7 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
-
+import logo from "./logo.svg";
+import "./App.css";
+import { useEffect } from "react";
+import { getAllMenuItems } from "./utils/api.js";
 function App() {
+  useEffect(() => {
+    const fetchApi = async () => {
+      try {
+        const {menu, options} = await getAllMenuItems();
+        console.log(menu)
+        console.log(options)
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchApi();
+  }, []);
   return (
     <div className="App">
       <header className="App-header">
