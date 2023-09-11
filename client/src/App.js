@@ -1,7 +1,24 @@
-import logo from "./logo.svg";
-import "./App.css";
-import { useEffect } from "react";
-import { getAllMenuItems } from "./utils/api.js";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './App.css';
+import Menu from './pages/Menu';
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  createHttpLink
+} from '@apollo/client';
+
+const httpLink = createHttpLink({
+  uri: '/graphql',
+});
+
+const client = new ApolloClient({
+  // Set up our client to execute the `authLink` middleware prior to making the request to our GraphQL API
+  // link: authLink.concat(httpLink),
+  cache: new InMemoryCache(),
+});
+
 function App() {
   useEffect(() => {
     const fetchApi = async () => {
@@ -16,22 +33,16 @@ function App() {
     fetchApi();
   }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ApolloProvider client={client}>
+    <Router>
+      <Routes>
+        <Route 
+          path="/"
+          element={<Menu />}
+        />
+      </Routes>
+    </Router>
+    </ApolloProvider>
   );
 }
 
