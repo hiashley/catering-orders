@@ -1,10 +1,10 @@
-import { QUERY_MENU } from '../utils/queries'
+import { QUERY_MENU_ITEM } from '../utils/queries'
 import { useQuery } from '@apollo/client';
 
 export default function Menu() {
-  const { loading, data } = useQuery(QUERY_MENU);
-  const menu = data?.menu || [];
-  console.log(menu)
+  const { loading, error, data } = useQuery(QUERY_MENU_ITEM);
+  const menuItems = data?.menuItems || [];
+  console.log(menuItems);
 
   return (
     <div>

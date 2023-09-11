@@ -2,7 +2,7 @@ import {gql} from '@apollo/client'
 
 export const QUERY_MENU_ITEM = gql`
   query menuItems {
-    menuItem {
+    menuItems {
       _id
       menuName
       menuDescription
@@ -13,7 +13,7 @@ export const QUERY_MENU_ITEM = gql`
   }`;
 
 export const QUERY_MENU_OPTION = gql`
-query menuOption {
+query menuOptions {
   menuOptions {
     _id
     optionValueId
