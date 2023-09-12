@@ -4,6 +4,7 @@ export const QUERY_MENU_ITEM = gql`
   query menuItems {
     menuItems {
       _id
+      menuId
       menuName
       menuDescription
       menuPrice

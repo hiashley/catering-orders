@@ -1,6 +1,10 @@
 const { Schema, model } = require("mongoose");
 
 const menuItemSchema = new Schema({
+  menuId: {
+    type: Schema.Types.Number,
+    required: true,
+  },
   menuName: {
     type: String,
     required: "You need to provide a menuName!",

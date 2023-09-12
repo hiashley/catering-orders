@@ -10,6 +10,7 @@ db.once("open", async () => {
 
     const menu = data.menu.map((item) => {
         return {
+            menuId: item.menu_id,
             menuName: item.menu_name,
             menuDescription: item.menu_description,
             menuPrice: item.menu_price,
@@ -29,9 +30,8 @@ db.once("open", async () => {
         }
     });
 
-    await MenuOption.insertMany(menu);
+    await MenuOption.insertMany(option);
 
-    console.log(option.length);
     process.exit(0);
   } catch (err) {
     console.error(err);

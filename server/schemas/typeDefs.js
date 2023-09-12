@@ -18,6 +18,7 @@ const typeDefs = `
 
   type MenuItem {
     _id: ID
+    menuId: Int
     menuName: String
     menuDescription: String
     menuPrice: Float
