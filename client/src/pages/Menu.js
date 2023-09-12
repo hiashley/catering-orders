@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { QUERY_MENU_ITEM, QUERY_MENU_OPTION } from '../utils/queries';
 import { useQuery } from '@apollo/client';
+import AccordionItem from '../components/AccordionItem';
 
 export default function Menu() {
   const { loading: loadingItem, error: errorItem, data: dataItem } = useQuery(QUERY_MENU_ITEM);
@@ -8,11 +9,8 @@ export default function Menu() {
 
   const menuItems = dataItem?.menuItems || [];
   const menuOptions = dataOption?.menuOptions || [];
-  console.log(menuOptions.map((option) => (
-      option.optionValue
-  )));
 
-  // State to manage whether the list is visible and which tab is active
+  // State to manage which tab is active
   const [activeTab, setActiveTab] = useState('Tab1');
 
   // Function to toggle the active tab
@@ -35,7 +33,7 @@ export default function Menu() {
           {activeTab === 'Tab1' && !loadingItem && !errorItem && (
             menuItems.map((item) => (
               <li key={item._id}>
-                {item.menuName}
+                <AccordionItem title={item.menuName} content={item.menuDescription} />
               </li>
             ))
           )}
@@ -43,7 +41,7 @@ export default function Menu() {
           {activeTab === 'Tab2' && !loadingOption && !errorOption && (
             menuOptions.map((option) => (
               <li key={option._id}>
-                {option.optionValue}
+                <AccordionItem title={option.optionValue} content={option.optionName} />
               </li>
             ))
           )}
@@ -52,3 +50,37 @@ export default function Menu() {
     </div>
   );
 }
+
+// function AccordionItem({ title, content }) {
+//   const [isOpen, setIsOpen] = useState(false);
+
+//   const toggleAccordion = () => {
+//     setIsOpen(!isOpen);
+//   };
+
+//   return (
+//     <div className={`accordion-item ${isOpen ? 'open' : ''}`}>
+//       <div className="accordion-title">
+//         <span className="accordion-arrow" onClick={toggleAccordion}>
+//           {isOpen ? '▼' : '▶'}
+//         </span>
+//         <span className="accordion-title-text">{title}</span>
+//       </div>
+//       <div className="accordion-content">
+//         {isOpen && (
+//           <div>
+//             <label htmlFor="ingredient">Ingredient:</label>
+//             <input type="text" id="ingredient" placeholder="Ingredient" />
+
+//             <label htmlFor="amount">Amount:</label>
+//             <input type="text" id="amount" placeholder="Amount" />
+
+//             <label htmlFor="unit">Unit:</label>
+//             <input type="text" id="unit" placeholder="Unit" />
+//           </div>
+//         )}
+//       </div>
+//     </div>
+//   );
+// }
+
