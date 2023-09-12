@@ -46,6 +46,50 @@ const resolvers = {
 
       return { token, user };
     },
+    addIngredientItem: async (parent, {menuId, name, amount, unit}) => {
+      const menuItem = await MenuItem.findOneAndUpdate({ _id: menuId},
+        {$addToSet: {ingredients: { name, amount, unit }}}, {
+          new: true,
+          runValidators: true,
+        }
+        )
+        return menuItem;
+    },
+    deleteIngredientItem: async (parent, { menuId, ingredientId }) => {
+        return MenuItem.findOneAndUpdate(
+          { _id: menuId },
+          {
+            $pull: {
+              ingredients: {
+                _id: ingredientId,
+              },
+            },
+          },
+          { new: true }
+        );
+    },
+    addIngredientOption: async (parent, {optionId, name, amount, unit}) => {
+      const menuOption = await MenuOption.findOneAndUpdate({ _id: optionId},
+        {$addToSet: {ingredients: { name, amount, unit }}}, {
+          new: true,
+          runValidators: true,
+        }
+        )
+        return menuOption;
+    },
+    deleteIngredientOption: async (parent, { optionId, ingredientId }) => {
+      return MenuOption.findOneAndUpdate(
+        { _id: optionId },
+        {
+          $pull: {
+            ingredients: {
+              _id: ingredientId,
+            },
+          },
+        },
+        { new: true }
+      );
+  },
   },
 };
 

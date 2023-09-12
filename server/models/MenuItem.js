@@ -35,7 +35,7 @@ const menuItemSchema = new Schema({
         required: true,
       },
       amount: {
-        type: String,
+        type: Schema.Types.Number,
         required: true,
       },
       unit: {
