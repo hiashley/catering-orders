@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
+import { useMutation } from '@apollo/client';
+import { ADD_INGREDIENT_ITEM, DELETE_INGREDIENT_ITEM } from '../utils/mutations'; // Replace with your actual import path
 
-function AccordionItem({ title, content }) {
+function AccordionItem({ title, content, menuId }) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const [addIngredientItem] = useMutation(ADD_INGREDIENT_ITEM);
+  const [deleteIngredientItem] = useMutation(DELETE_INGREDIENT_ITEM);
 
   const createInputRow = () => {
     return {
@@ -10,7 +15,6 @@ function AccordionItem({ title, content }) {
       unit: '',
     };
   };
-
   const [inputRows, setInputRows] = useState([createInputRow()]);
 
   const toggleAccordion = () => {
@@ -21,12 +25,26 @@ function AccordionItem({ title, content }) {
     setInputRows([...inputRows, createInputRow()]);
   };
 
-  const handleRemoveRow = (index) => {
-    if (inputRows.length > 1) {
-      const updatedRows = [...inputRows];
-      updatedRows.splice(index, 1);
-      setInputRows(updatedRows);
+  const handleRemoveRow = async (index) => {
+    const ingredientId = inputRows[index]._id; // Replace with your actual logic to get the ingredientId
+    console.log(ingredientId)
+    if (ingredientId) {
+      // Use the deleteIngredientItem mutation to remove the ingredient
+      try {
+        await deleteIngredientItem({
+          variables: {
+            menuId,
+            ingredientId,
+          },
+        });
+      } catch (error) {
+        console.error('Error deleting ingredient:', error);
+        return;
+      }
     }
+    const updatedRows = [...inputRows];
+    updatedRows.splice(index, 1);
+    setInputRows(updatedRows);
   };
 
   const handleInputChange = (index, event) => {
@@ -36,8 +54,34 @@ function AccordionItem({ title, content }) {
     setInputRows(updatedRows);
   };
 
+  const handleRowSubmit = async (index) => {
+    const {ingredient, amount, unit } = inputRows[index];
+    try {
+      const response = await addIngredientItem({
+        variables: {
+          menuId: menuId,
+          name: ingredient,
+          amount: parseFloat(amount),
+          unit: unit,
+        },
+      });
+  console.log(response)
+      // Check for GraphQL errors
+      if (response.errors && response.errors.length > 0) {
+        console.error('GraphQL Error:', response.errors);
+        // Handle GraphQL errors here
+      } else {
+        // Handle successful submission, e.g., clear form fields or show a success message
+      }
+    } catch (error) {
+      console.error('Error adding ingredient:', error);
+      // Handle other errors, such as network errors
+    }
+  };
+  
+
   return (
-    <div className={`accordion-item ${isOpen ? 'open' : ''}`}>
+    <div data-id={menuId} className={`accordion-item ${isOpen ? 'open' : ''}`}>
       <div className="accordion-title">
         <span className="accordion-arrow" onClick={toggleAccordion}>
           {isOpen ? '▼' : '▶'}
@@ -79,8 +123,9 @@ function AccordionItem({ title, content }) {
                   placeholder="Unit"
                 />
 
+                <button onClick={() => handleRowSubmit(index, menuId)}>Submit</button>
                 {inputRows.length > 1 && (
-                  <button onClick={() => handleRemoveRow(index)}>Remove Row</button>
+                  <button onClick={() => handleRemoveRow(index, menuId)}>Remove Row</button>
                 )}
               </div>
             ))}

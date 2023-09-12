@@ -32,8 +32,8 @@ export default function Menu() {
         <ul>
           {activeTab === 'Tab1' && !loadingItem && !errorItem && (
             menuItems.map((item) => (
-              <li key={item._id}>
-                <AccordionItem title={item.menuName} content={item.menuDescription} />
+              <li key={item.menuId}>
+                <AccordionItem menuId={item._id} title={item.menuName} content={item.menuDescription} />
               </li>
             ))
           )}

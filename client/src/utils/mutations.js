@@ -19,7 +19,7 @@ mutation addIngredientItem($menuId: ID!, $name: String!, $amount: Float!, $unit:
   }
 `;
 
-export const DELETE_INGEDIENT_ITEM = gql`
+export const DELETE_INGREDIENT_ITEM = gql`
 mutation deleteIngredientItem($menuId: ID!, $ingredientId: ID!) {
     deleteIngredientItem(menuId: $menuId, ingredientId: $ingredientId) {
       _id
@@ -56,7 +56,7 @@ mutation addIngredientOption($optionId: ID!, $name: String!, $amount: Float!, $u
     }
   }
 `
-export const DELETE_INGEDIENT_OPTION = gql`
+export const DELETE_INGREDIENT_OPTION = gql`
 mutation DeleteIngredientOption($optionId: ID!, $ingredientId: ID!) {
     deleteIngredientOption(optionId: $optionId, ingredientId: $ingredientId) {
       _id
