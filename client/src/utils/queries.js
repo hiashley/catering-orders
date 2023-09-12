@@ -21,6 +21,6 @@ query menuOptions {
     optionValue
     optionPrice
     posModId
-    ingredients
+
   }
 }`;

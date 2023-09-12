@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Menu from './pages/Menu';
+import MenuTwo from './pages/MenuTwo';
 import {
   ApolloClient,
   InMemoryCache,
@@ -24,6 +25,7 @@ function App() {
           path="/"
           element={<Menu />}
         />
+
       </Routes>
     </Router>
     </ApolloProvider>

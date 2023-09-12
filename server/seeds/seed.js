@@ -31,7 +31,7 @@ db.once("open", async () => {
 
     await MenuOption.insertMany(menu);
 
-    console.log(option);
+    console.log(option.length);
     process.exit(0);
   } catch (err) {
     console.error(err);

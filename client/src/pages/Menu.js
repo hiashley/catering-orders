@@ -8,7 +8,9 @@ export default function Menu() {
 
   const menuItems = dataItem?.menuItems || [];
   const menuOptions = dataOption?.menuOptions || [];
-  console.log(menuOptions);
+  console.log(menuOptions.map((option) => (
+      option.optionValue
+  )));
 
   // State to manage whether the list is visible and which tab is active
   const [activeTab, setActiveTab] = useState('Tab1');
