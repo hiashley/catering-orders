@@ -1,18 +1,50 @@
-import React, { useState } from 'react';
-import { useMutation } from '@apollo/client';
-import { ADD_INGREDIENT_ITEM, DELETE_INGREDIENT_ITEM } from '../utils/mutations'; // Replace with your actual import path
+import React, { useState } from "react";
+import { useMutation } from "@apollo/client";
+import {
+  ADD_INGREDIENT_ITEM,
+  DELETE_INGREDIENT_ITEM,
+} from "../utils/mutations"; // Replace with your actual import path
+import { QUERY_MENU_ITEM } from "../utils/queries";
+import BasicAccordion from "./AccordionUI";
 
-function AccordionItem({ title, content, menuId }) {
+function AccordionItem({ title, content, menuId, ingredients }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const [addIngredientItem] = useMutation(ADD_INGREDIENT_ITEM);
-  const [deleteIngredientItem] = useMutation(DELETE_INGREDIENT_ITEM);
+  const [addIngredientItem] = useMutation(ADD_INGREDIENT_ITEM, {
+    update(cache, { data: { addIngredientItem } }) {
+      try {
+        const { menuItem } = cache.readQuery({ query: QUERY_MENU_ITEM });
+
+        cache.writeQuery({
+          query: QUERY_MENU_ITEM,
+          data: { menuItem: [addIngredientItem, ...menuItem] },
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
+  });
+
+  const [deleteIngredientItem] = useMutation(DELETE_INGREDIENT_ITEM, {
+    update(cache, { data: { deleteIngredientItem } }) {
+      try {
+        const { menuItem } = cache.readQuery({ query: QUERY_MENU_ITEM });
+
+        cache.writeQuery({
+          query: QUERY_MENU_ITEM,
+          data: { menuItem: [deleteIngredientItem, ...menuItem] },
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
+  });
 
   const createInputRow = () => {
     return {
-      ingredient: '',
-      amount: '',
-      unit: '',
+      ingredient: "",
+      amount: "",
+      unit: "",
     };
   };
   const [inputRows, setInputRows] = useState([createInputRow()]);
@@ -25,9 +57,9 @@ function AccordionItem({ title, content, menuId }) {
     setInputRows([...inputRows, createInputRow()]);
   };
 
-  const handleRemoveRow = async (index) => {
-    const ingredientId = inputRows[index]._id; // Replace with your actual logic to get the ingredientId
-    console.log(ingredientId)
+  const handleRemoveRow = async (event) => {
+    const ingredientId = event.target.dataset.ingredientid; // Replace with your actual logic to get the ingredientId
+    console.log(ingredientId);
     if (ingredientId) {
       // Use the deleteIngredientItem mutation to remove the ingredient
       try {
@@ -38,68 +70,54 @@ function AccordionItem({ title, content, menuId }) {
           },
         });
       } catch (error) {
-        console.error('Error deleting ingredient:', error);
+        console.error("Error deleting ingredient:", error);
         return;
       }
     }
-    const updatedRows = [...inputRows];
-    updatedRows.splice(index, 1);
-    setInputRows(updatedRows);
   };
-
-  const handleInputChange = (index, event) => {
-    const { name, value } = event.target;
-    const updatedRows = [...inputRows];
-    updatedRows[index][name] = value;
-    setInputRows(updatedRows);
-  };
-
   const handleRowSubmit = async (index) => {
-    const {ingredient, amount, unit } = inputRows[index];
     try {
       const response = await addIngredientItem({
         variables: {
-          menuId: menuId,
-          name: ingredient,
-          amount: parseFloat(amount),
-          unit: unit,
+          menuId: "6500a4db493f8bc4519c5fc9",
+          name: "hello",
+          amount: parseFloat(1.2),
+          unit: "oz",
         },
       });
-  console.log(response)
       // Check for GraphQL errors
       if (response.errors && response.errors.length > 0) {
-        console.error('GraphQL Error:', response.errors);
+        console.error("GraphQL Error:", response.errors);
         // Handle GraphQL errors here
       } else {
         // Handle successful submission, e.g., clear form fields or show a success message
       }
     } catch (error) {
-      console.error('Error adding ingredient:', error);
+      console.error("Error adding ingredient:", error);
       // Handle other errors, such as network errors
     }
   };
-  
 
   return (
-    <div data-id={menuId} className={`accordion-item ${isOpen ? 'open' : ''}`}>
+    <>
+    <div data-id={menuId} className={`accordion-item ${isOpen ? "open" : ""}`}>
       <div className="accordion-title">
         <span className="accordion-arrow" onClick={toggleAccordion}>
-          {isOpen ? '▼' : '▶'}
+          {isOpen ? "▼" : "▶"}
         </span>
         <span className="accordion-title-text">{title}</span>
       </div>
       <div className="accordion-content">
         {isOpen && (
           <div>
-            {inputRows.map((row, index) => (
+            {ingredients?.map((ingredient, index) => (
               <div key={index} className="input-row">
                 <label htmlFor={`ingredient-${index}`}>Ingredient:</label>
                 <input
                   type="text"
                   id={`ingredient-${index}`}
                   name="ingredient"
-                  value={row.ingredient}
-                  onChange={(event) => handleInputChange(index, event)}
+                  value={ingredient.name}
                   placeholder="Ingredient"
                 />
 
@@ -108,8 +126,7 @@ function AccordionItem({ title, content, menuId }) {
                   type="text"
                   id={`amount-${index}`}
                   name="amount"
-                  value={row.amount}
-                  onChange={(event) => handleInputChange(index, event)}
+                  value={ingredient.amount}
                   placeholder="Amount"
                 />
 
@@ -118,23 +135,51 @@ function AccordionItem({ title, content, menuId }) {
                   type="text"
                   id={`unit-${index}`}
                   name="unit"
-                  value={row.unit}
-                  onChange={(event) => handleInputChange(index, event)}
+                  value={ingredient.unit}
                   placeholder="Unit"
                 />
 
-                <button onClick={() => handleRowSubmit(index, menuId)}>Submit</button>
-                {inputRows.length > 1 && (
-                  <button onClick={() => handleRemoveRow(index, menuId)}>Remove Row</button>
-                )}
+                <button onClick={() => handleRowSubmit(index, menuId)}>
+                  Save
+                </button>
+                <button
+                  data-ingredientid={ingredient._id}
+                  onClick={(event) => handleRemoveRow(event)}
+                >
+                  Delete
+                </button>
               </div>
             ))}
-            <button onClick={handleAddRow}>Add Row</button>
+            <div className="input-row">
+              <label htmlFor={`ingredien`}>Ingredient:</label>
+              <input
+                type="text"
+                id={`ingredient`}
+                name="ingredient"
+                placeholder="Ingredient"
+              />
+
+              <label htmlFor={`amount`}>Amount:</label>
+              <input
+                type="text"
+                id={`amount`}
+                name="amount"
+                placeholder="Amount"
+              />
+
+              <label htmlFor={`unit`}>Unit:</label>
+              <input type="text" id={`unit`} name="unit" placeholder="Unit" />
+
+              <button onClick={() => handleRowSubmit(menuId)}>Add</button>
+            </div>
           </div>
         )}
       </div>
     </div>
+<BasicAccordion />
+    </>
   );
 }
 
 export default AccordionItem;
+

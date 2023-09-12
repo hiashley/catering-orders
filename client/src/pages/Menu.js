@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { QUERY_MENU_ITEM, QUERY_MENU_OPTION } from '../utils/queries';
 import { useQuery } from '@apollo/client';
 import AccordionItem from '../components/AccordionItem';
+import BasicAccordion from '../components/AccordionUI';
 
 export default function Menu() {
   const { loading: loadingItem, error: errorItem, data: dataItem } = useQuery(QUERY_MENU_ITEM);
@@ -29,12 +30,10 @@ export default function Menu() {
         <button onClick={() => toggleTab('Tab2')}>Tab 2</button>
 
         {/* List of items (revealed based on the active tab) */}
-        <ul>
+        <div>
           {activeTab === 'Tab1' && !loadingItem && !errorItem && (
             menuItems.map((item) => (
-              <li key={item.menuId}>
-                <AccordionItem menuId={item._id} title={item.menuName} content={item.menuDescription} />
-              </li>
+                <BasicAccordion {...item} />
             ))
           )}
 
@@ -43,9 +42,9 @@ export default function Menu() {
               <li key={option._id}>
                 <AccordionItem title={option.optionValue} content={option.optionName} />
               </li>
-            ))
+            ))  
           )}
-        </ul>
+        </div>
       </div>
     </div>
   );

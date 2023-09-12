@@ -9,6 +9,12 @@ export const QUERY_MENU_ITEM = gql`
       menuDescription
       menuPrice
       posId
+      ingredients{
+        _id
+        name
+        amount
+        unit
+      }
     }
   }`;
 
@@ -21,5 +27,11 @@ query menuOptions {
     optionValue
     optionPrice
     posModId
+    ingredients {
+      _id
+      name
+      amount
+      unit
+    }
   }
 }`;
