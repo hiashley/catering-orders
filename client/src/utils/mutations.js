@@ -75,6 +75,24 @@ mutation addIngredientOption($optionId: ID!, $name: String!, $amount: Float!, $u
     }
   }
 `
+export const UPDATE_INGREDIENT_OPTION = gql`
+mutation updateIngredientOption($optionId: ID!, $ingredientId: ID!, $name: String!, $amount: Float!, $unit: String!) {
+  updateIngredientOption(optionId: $optionId, ingredientId: $ingredientId, name: $name, amount: $amount, unit: $unit) {
+    _id
+    optionValueId
+    optionName
+    optionValue
+    optionPrice
+    posModId
+    ingredients {
+      _id
+      name
+      amount
+      unit
+    }
+  }
+}
+`
 export const DELETE_INGREDIENT_OPTION = gql`
 mutation DeleteIngredientOption($optionId: ID!, $ingredientId: ID!) {
     deleteIngredientOption(optionId: $optionId, ingredientId: $ingredientId) {

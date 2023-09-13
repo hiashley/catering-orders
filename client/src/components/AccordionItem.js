@@ -10,9 +10,11 @@ import { useMutation } from "@apollo/client";
 import {
   ADD_INGREDIENT_ITEM,
   DELETE_INGREDIENT_ITEM,
-  UPDATE_INGREDIENT_ITEM
+  UPDATE_INGREDIENT_ITEM,
+  ADD_INGREDIENT_OPTION,
+  DELETE_INGREDIENT_OPTION
 } from "../utils/mutations";
-import { QUERY_MENU_ITEM } from "../utils/queries";
+import { QUERY_MENU_ITEM, QUERY_MENU_OPTION } from "../utils/queries";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
@@ -58,7 +60,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   borderTop: "1px solid rgba(0, 0, 0, .125)",
 }));
 
-export default function AccordionItem({ name, price, posId, ingredients, _id }) {
+export default function AccordionItem({ name, price, posId, ingredients, _id, isItem }) {
   const [ingredientName, setIngredientName] = useState("");
   const [amount, setAmount] = useState(0);
   const [selectedUnit, setSelectedUnit] = useState("");
@@ -76,11 +78,26 @@ export default function AccordionItem({ name, price, posId, ingredients, _id }) 
       }
     },
   });
+  const [addIngredientOption] = useMutation(ADD_INGREDIENT_OPTION, {
+    update(cache, { data: { addIngredientOption } }) {
+      try {
+        const { menuOption } = cache.readQuery({ query: QUERY_MENU_OPTION });
+
+        cache.writeQuery({
+          query: QUERY_MENU_OPTION,
+          data: { menuOption: [addIngredientOption, ...menuOption] },
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
+  });
 
 
   const handleRowSubmit = async (index) => {
     try {
-      const response = await addIngredientItem({
+      if (isItem) {
+      await addIngredientItem({
         variables: {
           menuId: _id,
           name: ingredientName,
@@ -88,13 +105,23 @@ export default function AccordionItem({ name, price, posId, ingredients, _id }) 
           unit: selectedUnit,
         },
       });
-      if (response.errors && response.errors.length > 0) {
-        console.error("GraphQL Error:", response.errors);
-      } else {
-        setIngredientName("");
-        setSelectedUnit("");
-        setAmount(0);
-      }
+    } else if (!isItem) {
+      await addIngredientOption({
+        variables: {
+          optionId: _id,
+          name: ingredientName,
+          amount: parseFloat(amount),
+          unit: selectedUnit,
+        },
+      });
+    }
+      // if (response.errors && response.errors.length > 0) {
+      //   console.error("GraphQL Error:", response.errors);
+      // } else {
+      //   setIngredientName("");
+      //   setSelectedUnit("");
+      //   setAmount(0);
+      // }
     } catch (error) {
       console.error("Error adding ingredient:", error);
     }
@@ -119,7 +146,11 @@ export default function AccordionItem({ name, price, posId, ingredients, _id }) 
       <AccordionDetails>
         {ingredients?.map((ingredient, index) => (
           <div key={index} className="input-row">
-            <IngredientItem  ingredient={ingredient} menuId={_id}/>
+            {isItem ? (
+                <IngredientItem isItem={true} ingredient={ingredient} menuId={_id} />
+              ) : (
+                <IngredientItem isItem={false} ingredient={ingredient} optionId={_id} />
+              )}
           </div>
         ))}
         <Box

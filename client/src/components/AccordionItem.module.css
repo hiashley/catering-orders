@@ -5,6 +5,16 @@
     gap: 1rem;
     justify-content: flex-start;
 }
+.orderItem {
+  display: flex;
+  flex-direction: row;
+  /* width: 100%; */
+  /* gap: 1rem; */
+  justify-content: space-around;
+  border: solid lightgray 1px;
+  padding: 1rem 0;
+  align-items: center;
+}
 
 
 .container {
@@ -12,5 +22,16 @@
 }
 
 .posId {
-    color: #1976d2
+    color: #1976d2;
+}
+.orderDetails {
+  text-decoration: none;
+  font-weight: 600;
+  color: #FFF;
+}
+.orderButton {
+  height: 4rem !important;
+}
+.orderName {
+  width: 9rem;
 }

@@ -12,7 +12,7 @@ router.get("/getAllMenuItems", async (req, res) => {
     }
 })
 
-router.get("/getAllOrders", async (req, res) => {
+router.get("/api/getAllOrders", async (req, res) => {
     try {
     const response = await fetch(`https://d1.getdaves.com/orders/${API_KEY}`);
     const data = await response.json()
