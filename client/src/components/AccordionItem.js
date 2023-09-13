@@ -1,15 +1,65 @@
-import React, { useState } from "react";
+import { styled } from "@mui/material/styles";
+import styles from "./AccordionItem.module.css"
+import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
+import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
+import MuiAccordionSummary from "@mui/material/AccordionSummary";
+import MuiAccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useMutation } from "@apollo/client";
 import {
   ADD_INGREDIENT_ITEM,
   DELETE_INGREDIENT_ITEM,
-} from "../utils/mutations"; // Replace with your actual import path
+} from "../utils/mutations";
 import { QUERY_MENU_ITEM } from "../utils/queries";
-import BasicAccordion from "./AccordionUI";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { useState } from "react";
+import { Button, FormControl, InputLabel } from "@mui/material";
+import units from "../utils/helpers";
 
-function AccordionItem({ title, content, menuId, ingredients }) {
-  const [isOpen, setIsOpen] = useState(false);
+const Accordion = styled((props) => (
+  <MuiAccordion disableGutters elevation={0} square {...props} />
+))(({ theme }) => ({
+  border: `1px solid ${theme.palette.divider}`,
+  "&:not(:last-child)": {
+    borderBottom: 0,
+  },
+  "&:before": {
+    display: "none",
+  },
+}));
 
+const AccordionSummary = styled((props) => (
+  <MuiAccordionSummary
+    expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem" }} />}
+    {...props}
+  />
+))(({ theme }) => ({
+  backgroundColor:
+    theme.palette.mode === "dark"
+      ? "rgba(255, 255, 255)"
+      : "rgba(0, 0, 0, .01)",
+  flexDirection: "row",
+  "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
+    transform: "rotate(180deg)",
+  },
+  "& .MuiAccordionSummary-content": {
+    marginLeft: theme.spacing(1),
+  },
+}));
+
+const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
+  padding: theme.spacing(2),
+  borderTop: "1px solid rgba(0, 0, 0, .125)",
+}));
+
+export default function AccordionItem({ name, price, posId, ingredients, _id }) {
+  const [ingredientName, setIngredientName] = useState("");
+  const [amount, setAmount] = useState(0);
+  const [selectedUnit, setSelectedUnit] = useState("");
   const [addIngredientItem] = useMutation(ADD_INGREDIENT_ITEM, {
     update(cache, { data: { addIngredientItem } }) {
       try {
@@ -40,32 +90,13 @@ function AccordionItem({ title, content, menuId, ingredients }) {
     },
   });
 
-  const createInputRow = () => {
-    return {
-      ingredient: "",
-      amount: "",
-      unit: "",
-    };
-  };
-  const [inputRows, setInputRows] = useState([createInputRow()]);
-
-  const toggleAccordion = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleAddRow = () => {
-    setInputRows([...inputRows, createInputRow()]);
-  };
-
   const handleRemoveRow = async (event) => {
-    const ingredientId = event.target.dataset.ingredientid; // Replace with your actual logic to get the ingredientId
-    console.log(ingredientId);
+    const ingredientId = event.target.dataset.ingredientid;
     if (ingredientId) {
-      // Use the deleteIngredientItem mutation to remove the ingredient
       try {
         await deleteIngredientItem({
           variables: {
-            menuId,
+            menuId: _id,
             ingredientId,
           },
         });
@@ -79,107 +110,143 @@ function AccordionItem({ title, content, menuId, ingredients }) {
     try {
       const response = await addIngredientItem({
         variables: {
-          menuId: "6500a4db493f8bc4519c5fc9",
-          name: "hello",
-          amount: parseFloat(1.2),
-          unit: "oz",
+          menuId: _id,
+          name: ingredientName,
+          amount: parseFloat(amount),
+          unit: selectedUnit,
         },
       });
-      // Check for GraphQL errors
       if (response.errors && response.errors.length > 0) {
         console.error("GraphQL Error:", response.errors);
-        // Handle GraphQL errors here
       } else {
-        // Handle successful submission, e.g., clear form fields or show a success message
+        setIngredientName("");
+        setSelectedUnit("");
+        setAmount(0);
       }
     } catch (error) {
       console.error("Error adding ingredient:", error);
-      // Handle other errors, such as network errors
     }
   };
 
   return (
-    <>
-    <div data-id={menuId} className={`accordion-item ${isOpen ? "open" : ""}`}>
-      <div className="accordion-title">
-        <span className="accordion-arrow" onClick={toggleAccordion}>
-          {isOpen ? "▼" : "▶"}
-        </span>
-        <span className="accordion-title-text">{title}</span>
-      </div>
-      <div className="accordion-content">
-        {isOpen && (
-          <div>
-            {ingredients?.map((ingredient, index) => (
-              <div key={index} className="input-row">
-                <label htmlFor={`ingredient-${index}`}>Ingredient:</label>
-                <input
-                  type="text"
-                  id={`ingredient-${index}`}
-                  name="ingredient"
-                  value={ingredient.name}
-                  placeholder="Ingredient"
-                />
-
-                <label htmlFor={`amount-${index}`}>Amount:</label>
-                <input
-                  type="text"
-                  id={`amount-${index}`}
-                  name="amount"
-                  value={ingredient.amount}
-                  placeholder="Amount"
-                />
-
-                <label htmlFor={`unit-${index}`}>Unit:</label>
-                <input
-                  type="text"
-                  id={`unit-${index}`}
-                  name="unit"
-                  value={ingredient.unit}
-                  placeholder="Unit"
-                />
-
-                <button onClick={() => handleRowSubmit(index, menuId)}>
-                  Save
-                </button>
-                <button
-                  data-ingredientid={ingredient._id}
-                  onClick={(event) => handleRemoveRow(event)}
-                >
-                  Delete
-                </button>
-              </div>
-            ))}
-            <div className="input-row">
-              <label htmlFor={`ingredien`}>Ingredient:</label>
-              <input
-                type="text"
-                id={`ingredient`}
-                name="ingredient"
-                placeholder="Ingredient"
-              />
-
-              <label htmlFor={`amount`}>Amount:</label>
-              <input
-                type="text"
-                id={`amount`}
-                name="amount"
-                placeholder="Amount"
-              />
-
-              <label htmlFor={`unit`}>Unit:</label>
-              <input type="text" id={`unit`} name="unit" placeholder="Unit" />
-
-              <button onClick={() => handleRowSubmit(menuId)}>Add</button>
-            </div>
+    <div className={styles.container}>
+    <Accordion size="small">
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="panel1d-content"
+        id="panel1d-header"
+      >
+        <div className={styles.item}>       
+         <p className={styles.posId}>{posId}</p>
+          <p><b>{name}</b></p>
+          <p>${price}</p> 
+          <p>{`(${ingredients.length} ingredients)`}</p>
           </div>
-        )}
-      </div>
+   
+      </AccordionSummary>
+      <AccordionDetails>
+        {ingredients?.map((ingredient, index) => (
+          <div key={index} className="input-row">
+            <Box
+              sx={{
+                "& > :not(style)": { m: 1, width: "23ch" },
+              }}
+              noValidate
+              autoComplete="off"
+            >
+              <TextField
+                id="outlined-basic"
+                label="Ingredient"
+                value={ingredient.name}
+                variant="outlined"
+                size="small"
+              />
+              <TextField
+                id="outlined-basic"
+                label="Amount"
+                variant="outlined"
+                value={ingredient.amount}
+                size="small"
+              />
+              <FormControl>
+                <InputLabel size="small" id="demo-simple-select-label">
+                  Unit
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={ingredient.unit}
+                  label="Unit"
+                  size="small"
+                  onChange={(e) => setSelectedUnit(e.target.value)}
+                >
+                  {units.map((option) => (
+                    <MenuItem value={option.value}>{option.name}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <Button
+                onClick={() => handleRowSubmit()}
+                variant="contained"
+              >
+                Save
+              </Button>
+              <Button
+                data-ingredientid={ingredient._id}
+                onClick={(event) => handleRemoveRow(event)}
+                variant="outlined"
+              >
+                Delete
+              </Button>
+            </Box>
+          </div>
+        ))}
+        <Box
+          sx={{
+            "& > :not(style)": { m: 1, width: "23ch" },
+          }}
+          noValidate
+          autoComplete="off"
+        >
+          <TextField
+            id="outlined-basic"
+            label="Ingredient"
+            variant="outlined"
+            size="small"
+            value={ingredientName}
+            onChange={(e) => setIngredientName(e.target.value)}
+          />
+          <TextField
+            id="outlined-basic"
+            label="Amount"
+            variant="outlined"
+            value={amount}
+            size="small"
+            onChange={(e) => setAmount(e.target.value)}
+          />
+          <FormControl>
+            <InputLabel size="small" id="demo-simple-select-label">
+              Unit
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={selectedUnit}
+              label="Unit"
+              size="small"
+              onChange={(e) => setSelectedUnit(e.target.value)}
+            >
+              {units.map((option) => (
+                <MenuItem value={option.value}>{option.name}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Button onClick={() => handleRowSubmit()} variant="contained">
+            Add
+          </Button>
+        </Box>
+      </AccordionDetails>
+    </Accordion>
     </div>
-<BasicAccordion />
-    </>
   );
 }
-
-export default AccordionItem;
-

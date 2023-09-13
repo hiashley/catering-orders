@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { QUERY_MENU_ITEM, QUERY_MENU_OPTION } from '../utils/queries';
 import { useQuery } from '@apollo/client';
 import AccordionItem from '../components/AccordionItem';
-import BasicAccordion from '../components/AccordionUI';
 
 export default function Menu() {
   const { loading: loadingItem, error: errorItem, data: dataItem } = useQuery(QUERY_MENU_ITEM);
@@ -20,7 +19,7 @@ export default function Menu() {
   };
 
   return (
-    <div>
+    <div style={{padding: "3rem"}}>
       <h1>Menu</h1>
       <div>
         {/* First tab button */}
@@ -33,16 +32,14 @@ export default function Menu() {
         <div>
           {activeTab === 'Tab1' && !loadingItem && !errorItem && (
             menuItems.map((item) => (
-                <BasicAccordion {...item} />
+                <AccordionItem price={item.menuPrice} name={item.menuName} posId={item.posId}{...item} />
             ))
           )}
 
           {activeTab === 'Tab2' && !loadingOption && !errorOption && (
             menuOptions.map((option) => (
-              <li key={option._id}>
-                <AccordionItem title={option.optionValue} content={option.optionName} />
-              </li>
-            ))  
+              <AccordionItem price={option.optionPrice} name={option.optionValue} posId={option.posModId} {...option} />
+            ))   
           )}
         </div>
       </div>
@@ -50,36 +47,4 @@ export default function Menu() {
   );
 }
 
-// function AccordionItem({ title, content }) {
-//   const [isOpen, setIsOpen] = useState(false);
-
-//   const toggleAccordion = () => {
-//     setIsOpen(!isOpen);
-//   };
-
-//   return (
-//     <div className={`accordion-item ${isOpen ? 'open' : ''}`}>
-//       <div className="accordion-title">
-//         <span className="accordion-arrow" onClick={toggleAccordion}>
-//           {isOpen ? '▼' : '▶'}
-//         </span>
-//         <span className="accordion-title-text">{title}</span>
-//       </div>
-//       <div className="accordion-content">
-//         {isOpen && (
-//           <div>
-//             <label htmlFor="ingredient">Ingredient:</label>
-//             <input type="text" id="ingredient" placeholder="Ingredient" />
-
-//             <label htmlFor="amount">Amount:</label>
-//             <input type="text" id="amount" placeholder="Amount" />
-
-//             <label htmlFor="unit">Unit:</label>
-//             <input type="text" id="unit" placeholder="Unit" />
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// }
 

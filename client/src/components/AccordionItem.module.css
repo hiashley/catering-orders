@@ -1,0 +1,14 @@
+.item {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 1rem
+}
+
+.container {
+    padding: 0.5rem 0 
+}
+
+.posId {
+    color: #1976d2
+}
