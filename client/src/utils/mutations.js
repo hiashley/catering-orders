@@ -19,6 +19,25 @@ mutation addIngredientItem($menuId: ID!, $name: String!, $amount: Float!, $unit:
   }
 `;
 
+export const UPDATE_INGREDIENT_ITEM = gql`
+mutation updateIngredientItem($menuId: ID!, $ingredientId: ID!, $name: String!, $amount: Float!, $unit: String!) {
+  updateIngredientItem(menuId: $menuId, ingredientId: $ingredientId, name: $name, amount: $amount, unit: $unit) {
+    _id
+    menuId
+    menuName
+    menuDescription
+    menuPrice
+    posId
+    ingredients {
+      _id
+      name
+      amount
+      unit
+    }
+  }
+}
+`;
+
 export const DELETE_INGREDIENT_ITEM = gql`
 mutation deleteIngredientItem($menuId: ID!, $ingredientId: ID!) {
     deleteIngredientItem(menuId: $menuId, ingredientId: $ingredientId) {

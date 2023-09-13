@@ -53,6 +53,8 @@ const typeDefs = `
     deleteIngredientItem(menuId: ID!, ingredientId: ID!) : MenuItem
     addIngredientOption(optionId: ID!, name: String!, amount: Float!, unit: String!) : MenuOption
     deleteIngredientOption(optionId: ID!, ingredientId: ID!) : MenuOption
+    updateIngredientItem(menuId: ID!, ingredientId: ID!, name: String!, amount: Float!, unit: String!): MenuItem
+    updateIngredientOption(optionId: ID!, ingredientId: ID!, name: String!, amount: Float!, unit: String!): MenuOption
   }
 `;
 

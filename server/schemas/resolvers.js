@@ -55,6 +55,25 @@ const resolvers = {
         )
         return menuItem;
     },
+    updateIngredientItem: async (parent, { menuId, ingredientId, name, amount, unit }) => {
+      const menuItem = await MenuItem.findOneAndUpdate(
+        { _id: menuId, 'ingredients._id': ingredientId },
+        {
+          $set: {
+            'ingredients.$.name': name,
+            'ingredients.$.amount': amount,
+            'ingredients.$.unit': unit,
+          },
+        },
+        { new: true, runValidators: true }
+      );
+  
+      if (!menuItem) {
+        throw new Error('Menu item or ingredient not found');
+      }
+  
+      return menuItem;
+    },
     deleteIngredientItem: async (parent, { menuId, ingredientId }) => {
         return MenuItem.findOneAndUpdate(
           { _id: menuId },
@@ -76,6 +95,25 @@ const resolvers = {
         }
         )
         return menuOption;
+    },
+    updateIngredientOption: async (parent, { optionId, ingredientId, name, amount, unit }) => {
+      const menuOption = await MenuOption.findOneAndUpdate(
+        { _id: optionId, 'ingredients._id': ingredientId },
+        {
+          $set: {
+            'ingredients.$.name': name,
+            'ingredients.$.amount': amount,
+            'ingredients.$.unit': unit,
+          },
+        },
+        { new: true, runValidators: true }
+      );
+  
+      if (!menuOption) {
+        throw new Error('Menu option or ingredient not found');
+      }
+  
+      return menuOption;
     },
     deleteIngredientOption: async (parent, { optionId, ingredientId }) => {
       return MenuOption.findOneAndUpdate(

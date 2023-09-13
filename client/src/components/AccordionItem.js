@@ -10,6 +10,7 @@ import { useMutation } from "@apollo/client";
 import {
   ADD_INGREDIENT_ITEM,
   DELETE_INGREDIENT_ITEM,
+  UPDATE_INGREDIENT_ITEM
 } from "../utils/mutations";
 import { QUERY_MENU_ITEM } from "../utils/queries";
 import Box from "@mui/material/Box";
@@ -19,6 +20,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useState } from "react";
 import { Button, FormControl, InputLabel } from "@mui/material";
 import units from "../utils/helpers";
+import IngredientItem from "./IngredientItem";
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -41,7 +43,7 @@ const AccordionSummary = styled((props) => (
   backgroundColor:
     theme.palette.mode === "dark"
       ? "rgba(255, 255, 255)"
-      : "rgba(0, 0, 0, .01)",
+      : "rgba(0, 0, 0, .005)",
   flexDirection: "row",
   "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
     transform: "rotate(180deg)",
@@ -75,37 +77,7 @@ export default function AccordionItem({ name, price, posId, ingredients, _id }) 
     },
   });
 
-  const [deleteIngredientItem] = useMutation(DELETE_INGREDIENT_ITEM, {
-    update(cache, { data: { deleteIngredientItem } }) {
-      try {
-        const { menuItem } = cache.readQuery({ query: QUERY_MENU_ITEM });
 
-        cache.writeQuery({
-          query: QUERY_MENU_ITEM,
-          data: { menuItem: [deleteIngredientItem, ...menuItem] },
-        });
-      } catch (e) {
-        console.error(e);
-      }
-    },
-  });
-
-  const handleRemoveRow = async (event) => {
-    const ingredientId = event.target.dataset.ingredientid;
-    if (ingredientId) {
-      try {
-        await deleteIngredientItem({
-          variables: {
-            menuId: _id,
-            ingredientId,
-          },
-        });
-      } catch (error) {
-        console.error("Error deleting ingredient:", error);
-        return;
-      }
-    }
-  };
   const handleRowSubmit = async (index) => {
     try {
       const response = await addIngredientItem({
@@ -147,58 +119,7 @@ export default function AccordionItem({ name, price, posId, ingredients, _id }) 
       <AccordionDetails>
         {ingredients?.map((ingredient, index) => (
           <div key={index} className="input-row">
-            <Box
-              sx={{
-                "& > :not(style)": { m: 1, width: "23ch" },
-              }}
-              noValidate
-              autoComplete="off"
-            >
-              <TextField
-                id="outlined-basic"
-                label="Ingredient"
-                value={ingredient.name}
-                variant="outlined"
-                size="small"
-              />
-              <TextField
-                id="outlined-basic"
-                label="Amount"
-                variant="outlined"
-                value={ingredient.amount}
-                size="small"
-              />
-              <FormControl>
-                <InputLabel size="small" id="demo-simple-select-label">
-                  Unit
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={ingredient.unit}
-                  label="Unit"
-                  size="small"
-                  onChange={(e) => setSelectedUnit(e.target.value)}
-                >
-                  {units.map((option) => (
-                    <MenuItem value={option.value}>{option.name}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <Button
-                onClick={() => handleRowSubmit()}
-                variant="contained"
-              >
-                Save
-              </Button>
-              <Button
-                data-ingredientid={ingredient._id}
-                onClick={(event) => handleRemoveRow(event)}
-                variant="outlined"
-              >
-                Delete
-              </Button>
-            </Box>
+            <IngredientItem  ingredient={ingredient} menuId={_id}/>
           </div>
         ))}
         <Box
