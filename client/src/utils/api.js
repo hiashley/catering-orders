@@ -1,9 +1,11 @@
-export const getAllMenuItems = async () => {
+import { BACKEND_HOST } from "./helpers";
+
+export const syncDatabase = async () => {
     try {
-        const response = await fetch('http://localhost:3001/getAllMenuItems');
-        const data = await response.json()
-        return data
-      } catch (error) {
-        console.log(error);
-      }
-} 
+        const response = await fetch(`${BACKEND_HOST}/syncDatabase`);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+      console.log(error)
+    }
+}

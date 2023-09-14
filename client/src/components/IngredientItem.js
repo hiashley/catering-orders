@@ -11,8 +11,10 @@ import {
 import { QUERY_MENU_ITEM, QUERY_MENU_OPTION } from "../utils/queries";
 import { useMutation } from "@apollo/client";
 import { useState } from "react";
-import units from "../utils/helpers";
+import {units} from "../utils/helpers";
 import Select from "@mui/material/Select";
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 const IngredientItem = ({ ingredient, menuId, optionId, isItem, isOption }) => {
   const [ingredientName, setIngredientName] = useState(ingredient?.name);
   const [amount, setAmount] = useState(ingredient?.amount);
@@ -131,6 +133,7 @@ const IngredientItem = ({ ingredient, menuId, optionId, isItem, isOption }) => {
   };
   return (
     <Box
+    key={ingredient.name}
       sx={{
         "& > :not(style)": { m: 1, width: "23ch" },
       }}
@@ -171,14 +174,14 @@ const IngredientItem = ({ ingredient, menuId, optionId, isItem, isOption }) => {
         </Select>
       </FormControl>
       <Button onClick={handleSaveRow} variant="contained">
-        Save
+        <SaveAltIcon />
       </Button>
       <Button
         data-ingredientid={ingredient._id}
         onClick={(event) => handleRemoveRow(event)}
         variant="outlined"
       >
-        Delete
+        <DeleteForeverIcon />
       </Button>
     </Box>
   );

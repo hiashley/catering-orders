@@ -1,15 +1,7 @@
 import { styled } from "@mui/material/styles";
 import styles from "./AccordionItem.module.css"
-import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
-import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
-import MuiAccordionSummary from "@mui/material/AccordionSummary";
-import MuiAccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Button, FormControl, InputLabel } from "@mui/material";
-
-import Box from "@mui/material/Box";
-
+import { Link } from "react-router-dom";
 
 // const Accordion = styled((props) => (
 //   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -72,7 +64,7 @@ export default function OrderItems(data) {
           <p>Total:</p>
           <p>${data.orderTotal}</p> 
          </div>
-         <Button variant="contained" className={styles.orderButton}><a href="/" className={styles.orderDetails}>Order Details</a></Button>
+         <Button variant="contained" className={styles.orderButton}><Link to="#" className={styles.orderDetails}>Order Details</Link></Button>
         </div>
    
 

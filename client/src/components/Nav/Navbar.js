@@ -1,17 +1,17 @@
 import style from "./Navbar.module.css"
 import fdlogo from "../../assets/images/famous-daves-logo.png"
-
+import  {Link} from 'react-router-dom'
 export default function Navbar() {
   return (
     <nav className="">
-      <a href="/" className={style.logo}>
+      <Link to="/" className={style.logo}>
         <img src={fdlogo} alt="fd" />
         Catering
-      </a>
+      </Link>
       <div className={style.navlinks}>
         <div className={style.navContainer}>
-        <a href="/">Menu</a>
-        <a href="/orders">Orders</a>
+        <Link to="/">Menu</Link>
+        <Link to="/orders">Orders</Link>
         </div>
       </div>
     </nav>

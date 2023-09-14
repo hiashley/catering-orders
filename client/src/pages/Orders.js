@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import OrderItems from '../components/OrderItems';
-
+import LoadingSpinner from '../components/UI/LoadingSpinner';
 export default function Orders() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +19,7 @@ export default function Orders() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <><LoadingSpinner/></>;
   }
 
   return (

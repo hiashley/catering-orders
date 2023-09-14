@@ -1,4 +1,9 @@
-const units = [
+const local = "http://localhost:3001";
+const prod = "DOMAIN HERE";
+
+export const BACKEND_HOST = local
+
+export const units = [
     {
         value: "EA",
         name: "EA"
@@ -49,5 +54,3 @@ const units = [
     //     name: "HALF TRAY"
     // },
 ]
-
-export default units;

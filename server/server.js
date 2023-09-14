@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4');
@@ -13,12 +14,15 @@ const server = new ApolloServer({
   resolvers,
 });
 
-// Create a new instance of an Apollo server with the GraphQL schema
+const allowedOrigins = process.env.NODE_ENV === 'production'
+  ? [process.env.PROUDUCTION_ORIGIN]
+  : [process.env.LOCAL_ORIGIN];
+
 const startApolloServer = async () => {
   await server.start();
   app.use(
     cors({
-      origin: "http://localhost:3000",
+      origin: allowedOrigins,
       methods: ["POST", "PUT", "GET", "DELETE", "PATCH", "OPTIONS", "HEAD"],
       credentials: true,
     })
