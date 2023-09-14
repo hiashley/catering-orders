@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Menu from './pages/Menu';
 import Orders from './pages/Orders';
+import OrderDetails from './pages/OrderDetails';
 import Navbar from './components/Nav/Navbar';
 import {
   ApolloClient,
@@ -10,7 +11,6 @@ import {
   ApolloProvider,
   createHttpLink
 } from '@apollo/client';
-
 
 
 const client = new ApolloClient({
@@ -32,6 +32,9 @@ function App() {
         <Route 
           path="/orders"
           element={<Orders />}
+        />
+        <Route path="/order/:orderId" 
+        element={<OrderDetails />}
         />
       </Routes>
     </Router>

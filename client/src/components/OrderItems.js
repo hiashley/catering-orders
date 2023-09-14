@@ -42,15 +42,14 @@ import { Link } from "react-router-dom";
 export default function OrderItems(data) {
   return (
     <div className={styles.container}>
-
         <div className={styles.orderItem}>
           <div>
             <p>Order ID:</p>
             <p className={styles.posId}>{data.orderId}</p>
           </div> 
-          <div className={styles.orderName}>
+          <div className={styles.orderDesc}>
             <p>Name:</p>
-            <p><b>{data.firstName}&nbsp;{data.lastName}</b></p>
+            <p><b>{data.firstName}<br />{data.lastName}</b></p>
           </div>
          <div>
           <p>Date Ordered:</p>
@@ -60,11 +59,19 @@ export default function OrderItems(data) {
           <p>Required By:</p>
           <p>{data.requiredBy}</p> 
          </div>
+         <div style={{width: '5rem'}}>
+          <p>Location</p>
+          <p>{data.locationCity}</p> 
+         </div>
+         <div>
+          <p>Plum ID:</p>
+          <p>{data.plumId}</p> 
+         </div>
          <div>
           <p>Total:</p>
           <p>${data.orderTotal}</p> 
          </div>
-         <Button variant="contained" className={styles.orderButton}><Link to="#" className={styles.orderDetails}>Order Details</Link></Button>
+         <Button variant="contained" className={styles.orderButton}><Link to={`/order/${data.orderId}`} className={styles.orderDetails}>Order Details</Link></Button>
         </div>
    
 

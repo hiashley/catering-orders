@@ -22,7 +22,7 @@ const startApolloServer = async () => {
   await server.start();
   app.use(
     cors({
-      origin: allowedOrigins,
+      origin: 'http://localhost:3000',
       methods: ["POST", "PUT", "GET", "DELETE", "PATCH", "OPTIONS", "HEAD"],
       credentials: true,
     })
