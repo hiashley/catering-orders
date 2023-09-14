@@ -64,7 +64,7 @@ export default function AccordionItem({
   isItem,
 }) {
   const [ingredientName, setIngredientName] = useState("");
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
   const [selectedUnit, setSelectedUnit] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -122,13 +122,9 @@ export default function AccordionItem({
           },
         });
       }
-      // if (response.errors && response.errors.length > 0) {
-      //   console.error("GraphQL Error:", response.errors);
-      // } else {
-      //   setIngredientName("");
-      //   setSelectedUnit("");
-      //   setAmount(0);
-      // }
+      setIngredientName("")
+      setAmount("");
+      setSelectedUnit("")
     } catch (error) {
       console.error("Error adding ingredient:", error);
     }
