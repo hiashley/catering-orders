@@ -1,17 +1,17 @@
 import React from 'react';
+import './styles.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Menu from './pages/Menu';
 import Orders from './pages/Orders';
-import OrderDetails from './pages/OrderDetails';
-import Navbar from './components/Nav/Navbar';
 import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
   createHttpLink
 } from '@apollo/client';
-
+import DrawerAppBar from './components/Nav/Navbar';
+import SingleOrder from './pages/SingleOrder';
 
 const client = new ApolloClient({
   uri: 'http://localhost:3001/graphql',
@@ -23,7 +23,7 @@ function App() {
   return (
     <ApolloProvider client={client}>
     <Router>
-      <Navbar />
+      <DrawerAppBar />
       <Routes>
         <Route 
           path="/"
@@ -33,8 +33,9 @@ function App() {
           path="/orders"
           element={<Orders />}
         />
-        <Route path="/order/:orderId" 
-        element={<OrderDetails />}
+        <Route 
+          path="/orders/:orderId"
+          element={<SingleOrder />}
         />
       </Routes>
     </Router>

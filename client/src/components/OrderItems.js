@@ -71,10 +71,8 @@ export default function OrderItems(data) {
           <p>Total:</p>
           <p>${data.orderTotal}</p> 
          </div>
-         <Button variant="contained" className={styles.orderButton}><Link to={`/order/${data.orderId}`} className={styles.orderDetails}>Order Details</Link></Button>
+         <Link to={`${data.orderId}`} className={styles.orderDetails}><Button variant="contained" className={styles.orderButton}>Order Details</Button></Link>
         </div>
-   
-
     </div>
   );
 }

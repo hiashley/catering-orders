@@ -41,7 +41,7 @@ export default function Menu() {
   return (
     <div style={{ padding: "3rem" }}>
       <div className="menu-header">      
-      <h1>Menu</h1>
+      <h1 className="text-3xl font-bold">Menu</h1>
       <Button onClick={handleSyncDatabase} variant="contained" disabled={isLoading}>
           {isLoading ? <CircularProgress size={24} /> : <RefreshIcon />}
         </Button>

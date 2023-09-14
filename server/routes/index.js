@@ -61,12 +61,17 @@ router.get("/syncDatabase", async (req , res) => {
             posId: item.plum_pos_id,
           };
         });
-    
+    //update all menu items set active = false;
         const newMenuItemOptions = [];
         for (const item of menuItemData) {
           const existingItem = await MenuItem.findOne({ menuId: item.menuId });
           if (!existingItem) {
+            //active =true
             newMenuItemOptions.push(item);
+          }else{
+            //update 
+            //set active = true
+
           }
         }
     

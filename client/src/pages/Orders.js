@@ -46,7 +46,8 @@ export default function Orders() {
 
   return (
     <div>
-      <h1 style={{ padding: "3rem 3rem 0" }}>Orders</h1>
+      <h1 className="text-3xl font-bold" style={{padding:"3rem 3rem 0"}}>Orders</h1>
+      {/* Render your component content using the fetched data */}
       {data.map((item) => (
         <div style={{ padding: "0 3rem" }} key={item.order_id}>
           <OrderItems

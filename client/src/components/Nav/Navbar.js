@@ -5,7 +5,7 @@ export default function Navbar() {
   return (
     <nav className="">
       <Link to="/" className={style.logo}>
-        <img src={fdlogo} alt="fd" />
+        <img src={fdlogo} alt="famous daves logo" />
         Catering
       </Link>
       <div className={style.navlinks}>

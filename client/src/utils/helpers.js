@@ -54,3 +54,14 @@ export const units = [
     //     name: "HALF TRAY"
     // },
 ]
+
+export function formatOrderTime(orderTime) {
+    const year = orderTime.slice(0, 4);
+    const month = orderTime.slice(4, 6);
+    const day = orderTime.slice(6, 8);
+    const hour = orderTime.slice(9, 11);
+    const minute = orderTime.slice(12, 14);
+    const date = new Date(year, month - 1, day, hour, minute);
+    const formattedDate = `${(month < 10 ? '' : '') + month}/${(day < 10 ? '0' : '') + day}/${year} at ${(date.getHours() % 12 || 12)}:${(minute < 10 ? '0' : '') + minute} ${date.getHours() >= 12 ? 'PM' : 'AM'}`;
+    return formattedDate;
+  }
