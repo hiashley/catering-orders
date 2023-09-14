@@ -5,6 +5,7 @@ import AccordionItem from '../components/AccordionItem';
 import { QUERY_MENU_ITEM, QUERY_MENU_OPTION } from '../utils/queries';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { syncDatabase } from '../utils/api';
+import LoadingSpinner from '../components/UI/LoadingSpinner';
 export default function Menu() {
   const { loading: loadingItem, error: errorItem, data: dataItem, refetch: refetchMenuItem } = useQuery(QUERY_MENU_ITEM);
   const { loading: loadingOption, error: errorOption, data: dataOption, refetch: refetchMenuOption } = useQuery(QUERY_MENU_OPTION);
@@ -32,6 +33,10 @@ export default function Menu() {
       setIsLoading(false);
     }
   };
+
+  if (loadingItem && loadingOption) {
+    return <><LoadingSpinner/></>
+  }
 
   return (
     <div style={{ padding: "3rem" }}>
